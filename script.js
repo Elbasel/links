@@ -1,7 +1,14 @@
-let urlList = localStorage.getItem('links') || '[]'
+let urlList = localStorage.getItem('links') || `[]`
 
 urlList = JSON.parse(urlList)
 
+const preDefinedLinks = [
+    {name: 'Zimbra', url: 'https://zimbra-emea.concentrix.com'}
+
+]
+
+
+urlList = urlList.concat(preDefinedLinks)
 
 const form = document.querySelector('form')
 const nameInput = document.querySelector('#nameInput')
@@ -9,13 +16,12 @@ const urlInput = document.querySelector('#urlInput')
 const linksDiv = document.querySelector('#links')
 const addButton = document.querySelector('header button')
 const formCancelButton = document.querySelector('form button')
-
+const textarea = document.querySelector('textarea')
 
 
 function addLinksFromStroage() {
     let i = 0;
     for (const link of urlList) {
-        console.log(link)
         addLink(link.name, link.url, i)
         i++;
     }
@@ -29,8 +35,20 @@ function updateStoredLinks(name, url) {
 }
 
 
-function addLink(name = nameInput.value, url = urlInput.value, num) {
+function addLink(name, url, num) {
 
+    for (let i = 0; i < preDefinedLinks.length; i++) {
+        if (preDefinedLinks[i].url === url) {
+            const htmlLinks = document.querySelectorAll('.link')
+            for (let i = 0; i < htmlLinks.length; i++) {
+                let href = htmlLinks[i].firstChild.getAttribute('href')
+                if (href === url) {
+                    return
+                }
+            }
+
+        }
+    }
     // const name = nameInput.value
     // const url = urlInput.value
 
@@ -91,15 +109,22 @@ function handleKeyboardPresses(e) {
             form.style.display = 'none'
         }
     }
+    else if (e.key === '+') {
+        addButton.click()
+    }
 }
 
+function saveTextArea(e) {
+    localStorage.textarea = e.target.value
+}
 
 form.addEventListener('submit', (e) => e.preventDefault())
 form.addEventListener('submit', (e) => updateStoredLinks(nameInput.value, urlInput.value))
 
-form.addEventListener('submit', (e) => addLink())
+form.addEventListener('submit', (e) => addLink(nameInput.value, urlInput.value, urlList.length))
 addButton.addEventListener('click', (e) => form.style.display = 'flex')
 document.addEventListener('keydown', (e) => handleKeyboardPresses(e))
 formCancelButton.addEventListener('click', (e) => form.style.display = 'none')
-
+textarea.addEventListener('input', (e) => saveTextArea(e))
 addLinksFromStroage()
+textarea.value = localStorage.textarea

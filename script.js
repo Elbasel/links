@@ -1,6 +1,9 @@
 let urlList = localStorage.getItem('links') || `[]`
 
+let savedList = localStorage.getItem('saved') || `[]`
+
 urlList = JSON.parse(urlList)
+savedList = JSON.parse(savedList)
 
 const preDefinedLinks = [
     {name: 'Zimbra', url: 'https://zimbra-emea.concentrix.com'}
@@ -17,6 +20,10 @@ const linksDiv = document.querySelector('#links')
 const addButton = document.querySelector('header button')
 const formCancelButton = document.querySelector('form button')
 const textarea = document.querySelector('textarea')
+const textareaResetButton = document.querySelector('#reset')
+const textareaUndoResetButton = document.querySelector('#undo-reset')
+const saveButton = document.querySelector('#save')
+const saved = document.querySelector('#saved')
 
 
 function addLinksFromStroage() {
@@ -115,7 +122,57 @@ function handleKeyboardPresses(e) {
 }
 
 function saveTextArea(e) {
-    localStorage.textarea = e.target.value
+    localStorage.textarea = textarea.value
+}
+
+
+function saveTextContent(e) {
+    if (textarea.value.length < 1) {
+        return
+    }
+    const para = document.createElement('p')
+    para.textContent = textarea.value
+
+    const removeButton = document.createElement('button')
+    removeButton.textContent = 'X'
+    removeButton.addEventListener('click', e => removePara(e))
+
+    removeButton.setAttribute('data-num', savedList.length)
+    para.appendChild(removeButton)
+
+    saved.appendChild(para)
+
+    savedList.push(textarea.value)
+    localStorage.saved = JSON.stringify(savedList)
+
+}
+
+function addSavedFromStorage() {
+    let i = 0;
+    for (const p of savedList) {
+        const para = document.createElement('p')
+        para.textContent = p
+        const removeButton = document.createElement('button')
+        removeButton.setAttribute('data-num', i)
+        removeButton.addEventListener('click', e => removePara(e))
+        i++;
+        removeButton.textContent = 'X'
+        para.appendChild(removeButton)
+
+        saved.appendChild(para)
+
+
+    }
+
+}
+
+
+function removePara(e) {
+    const index = e.target.getAttribute('data-num')
+    savedList.splice(index, 1)
+    saved.innerHTML = ''
+    localStorage.saved = JSON.stringify(savedList)
+    addSavedFromStorage()
 }
 
 form.addEventListener('submit', (e) => e.preventDefault())
@@ -126,5 +183,11 @@ addButton.addEventListener('click', (e) => form.style.display = 'flex')
 document.addEventListener('keydown', (e) => handleKeyboardPresses(e))
 formCancelButton.addEventListener('click', (e) => form.style.display = 'none')
 textarea.addEventListener('input', (e) => saveTextArea(e))
+textareaResetButton.addEventListener('click', (e) => {localStorage.textareaCache = textarea.value; textarea.value = '';  saveTextArea()})
+textareaUndoResetButton.addEventListener('click', (e) => {textarea.value = localStorage.textareaCache})
+saveButton.addEventListener('click', (e) => saveTextContent(e))
+
 addLinksFromStroage()
+addSavedFromStorage()
+
 textarea.value = localStorage.textarea

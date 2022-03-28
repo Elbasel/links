@@ -100,7 +100,7 @@ main {
     border: 1px solid var(--secondary);
 }
 
-main div {
+main > div {
     /* border: 1px solid green; */
     flex-basis: 50%;
     /* border: 1px solid var(--secondary); */
@@ -174,7 +174,7 @@ main div {
     transform: scale(1.1);
 }
 
-p {
+form p {
     color: var(--text);
     /* border: 1px solid white; */
     flex-basis: 80%;
@@ -255,7 +255,7 @@ textarea {
     background-color: var(--secondary);
     padding: 12px;
     color: var(--text);
-    font-size: 32px;
+    font-size: 24px;
     resize: none;
 }
 
@@ -269,7 +269,7 @@ textarea {
     /* border: 1px solid white; */
 }
 
-#text-input button{
+#text-input > button{
     width: 80%;
     height: 30px;
     margin-left: auto;
@@ -278,7 +278,7 @@ textarea {
     border-radius: 24px;
     /* border: 0; */
     color: var(--text);
-    font-size: 24px;
+    font-size: 18px;
     padding: 16px;
     display: flex;
     align-items: center;
@@ -286,4 +286,40 @@ textarea {
     border-color: var(--secondary);
     box-shadow: none;
     /* border-style: solid; */
+}
+
+
+#saved {
+    /* border: 1px solid var(--blue); */
+    width: 100%;
+    /* max-width: 800px; */
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    /* gap: 2px; */
+    overflow-x:hidden;
+    scroll-behavior: smooth ;
+}
+
+#saved p {
+    border: 1px solid var(--secondary);
+    background-color: darkred;
+    font-size: 24px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+    /* line-height: 100%; */
+}
+
+#saved p button {
+    /* position: relative; */
+    /* right: 60px;?\ */
+    width: 30px;
+    height: 30px;
+    background-color: var(--blue);
+    border-radius: 20%;
+    color: var(--text);
+    justify-self: flex-end;
 }
